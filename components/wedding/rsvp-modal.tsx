@@ -12,8 +12,6 @@ interface RsvpModalProps {
 }
 
 export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
   const [fullName, setFullName] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -22,7 +20,7 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!firstName.trim() || !lastName.trim()) {
+    if (!fullName.trim()) {
       setError("Por favor, preencha seu nome completo.")
       return
     }
@@ -37,8 +35,7 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
+          fullName: fullName.trim(),
           confirmedAt: new Date().toISOString(),
         }),
       })
