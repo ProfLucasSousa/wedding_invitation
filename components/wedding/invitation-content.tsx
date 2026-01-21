@@ -36,20 +36,25 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
       initial="hidden"
       animate={isVisible ? "visible" : "hidden"}
     >
-      {/* Centered icon between top florals */}
+      {/* Centered icon between top florals - Wedding rings */}
       <motion.div 
         variants={itemVariants}
         className="flex justify-center mb-6"
       >
-        <div className="w-16 h-16 rounded-full bg-[#2D4A3E] flex items-center justify-center shadow-lg">
-          <svg 
-            viewBox="0 0 24 24" 
-            className="w-8 h-8 text-[#C4A35A]"
-            fill="currentColor"
-          >
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
-        </div>
+        <svg 
+          viewBox="0 0 48 32" 
+          className="w-24 h-16 text-[#C4A35A]"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          {/* Left ring */}
+          <circle cx="16" cy="16" r="10" />
+          {/* Right ring */}
+          <circle cx="32" cy="16" r="10" />
+          {/* Diamond on left ring */}
+          <path d="M13 7 L16 3 L19 7" fill="currentColor" strokeWidth="1.5" />
+        </svg>
       </motion.div>
 
       {/* Biblical quote */}
