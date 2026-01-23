@@ -73,7 +73,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="10"
             transform="rotate(-50 25 220)"
             fill="#5A7A5A"
-            opacity="0.9"
+            opacity="1"
           />
           <ellipse
             cx="40"
@@ -82,7 +82,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="9"
             transform="rotate(-35 40 195)"
             fill="#6B8B6B"
-            opacity="0.85"
+            opacity="0.95"
           />
           <ellipse
             cx="55"
@@ -91,7 +91,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="8"
             transform="rotate(-45 55 170)"
             fill="#5A7A5A"
-            opacity="0.9"
+            opacity="1"
           />
           <ellipse
             cx="68"
@@ -100,7 +100,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="8"
             transform="rotate(-30 68 145)"
             fill="#7A9B7A"
-            opacity="0.85"
+            opacity="0.95"
           />
           <ellipse
             cx="82"
@@ -109,7 +109,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="7"
             transform="rotate(-50 82 120)"
             fill="#5A7A5A"
-            opacity="0.9"
+            opacity="1"
           />
           <ellipse
             cx="95"
@@ -118,7 +118,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="7"
             transform="rotate(-40 95 95)"
             fill="#6B8B6B"
-            opacity="0.8"
+            opacity="0.9"
           />
           <ellipse
             cx="110"
@@ -127,7 +127,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="6"
             transform="rotate(-55 110 70)"
             fill="#5A7A5A"
-            opacity="0.85"
+            opacity="0.95"
           />
           <ellipse
             cx="125"
@@ -136,7 +136,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="5"
             transform="rotate(-35 125 50)"
             fill="#7A9B7A"
-            opacity="0.8"
+            opacity="0.9"
           />
           <ellipse
             cx="145"
@@ -145,7 +145,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="5"
             transform="rotate(-50 145 30)"
             fill="#5A7A5A"
-            opacity="0.75"
+            opacity="0.85"
           />
           
           {/* Medium leaves on other side */}
@@ -156,7 +156,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="6"
             transform="rotate(-70 15 230)"
             fill="#7A9B7A"
-            opacity="0.7"
+            opacity="0.85"
           />
           <ellipse
             cx="48"
@@ -165,7 +165,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="5"
             transform="rotate(15 48 180)"
             fill="#8BAB8B"
-            opacity="0.65"
+            opacity="0.8"
           />
           <ellipse
             cx="75"
@@ -174,7 +174,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="5"
             transform="rotate(20 75 135)"
             fill="#7A9B7A"
-            opacity="0.7"
+            opacity="0.85"
           />
           <ellipse
             cx="100"
@@ -183,7 +183,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="4"
             transform="rotate(25 100 85)"
             fill="#8BAB8B"
-            opacity="0.6"
+            opacity="0.75"
           />
           <ellipse
             cx="120"
@@ -192,7 +192,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="4"
             transform="rotate(30 120 60)"
             fill="#7A9B7A"
-            opacity="0.65"
+            opacity="0.8"
           />
           
           {/* Small accent leaves */}
@@ -203,7 +203,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="4"
             transform="rotate(-60 35 205)"
             fill="#8BAB8B"
-            opacity="0.5"
+            opacity="0.7"
           />
           <ellipse
             cx="62"
@@ -212,7 +212,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="3"
             transform="rotate(-25 62 158)"
             fill="#9BBB9B"
-            opacity="0.5"
+            opacity="0.7"
           />
           <ellipse
             cx="88"
@@ -221,7 +221,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="3"
             transform="rotate(-65 88 108)"
             fill="#8BAB8B"
-            opacity="0.55"
+            opacity="0.75"
           />
           <ellipse
             cx="115"
@@ -230,7 +230,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="3"
             transform="rotate(-40 115 58)"
             fill="#9BBB9B"
-            opacity="0.5"
+            opacity="0.7"
           />
           
           {/* Tiny leaves */}
@@ -241,7 +241,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="2.5"
             transform="rotate(-75 50 185)"
             fill="#AACBAA"
-            opacity="0.4"
+            opacity="0.65"
           />
           <ellipse
             cx="78"
@@ -250,7 +250,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="2.5"
             transform="rotate(10 78 128)"
             fill="#AACBAA"
-            opacity="0.45"
+            opacity="0.7"
           />
           <ellipse
             cx="105"
@@ -259,20 +259,20 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="2"
             transform="rotate(-30 105 78)"
             fill="#AACBAA"
-            opacity="0.4"
+            opacity="0.65"
           />
           
           {/* Decorative gold dots */}
-          <circle cx="30" cy="210" r="2.5" fill="#C4A35A" opacity="0.6" />
-          <circle cx="55" cy="165" r="2" fill="#C4A35A" opacity="0.5" />
-          <circle cx="80" cy="115" r="2" fill="#C4A35A" opacity="0.55" />
-          <circle cx="105" cy="65" r="2" fill="#C4A35A" opacity="0.5" />
-          <circle cx="135" cy="35" r="1.5" fill="#C4A35A" opacity="0.45" />
+          <circle cx="30" cy="210" r="2.5" fill="#C4A35A" opacity="0.8" />
+          <circle cx="55" cy="165" r="2" fill="#C4A35A" opacity="0.75" />
+          <circle cx="80" cy="115" r="2" fill="#C4A35A" opacity="0.8" />
+          <circle cx="105" cy="65" r="2" fill="#C4A35A" opacity="0.75" />
+          <circle cx="135" cy="35" r="1.5" fill="#C4A35A" opacity="0.7" />
           
           {/* Additional small gold accents */}
-          <circle cx="45" cy="188" r="1.5" fill="#D4B87A" opacity="0.4" />
-          <circle cx="70" cy="140" r="1.5" fill="#D4B87A" opacity="0.4" />
-          <circle cx="95" cy="90" r="1.5" fill="#D4B87A" opacity="0.4" />
+          <circle cx="45" cy="188" r="1.5" fill="#D4B87A" opacity="0.65" />
+          <circle cx="70" cy="140" r="1.5" fill="#D4B87A" opacity="0.65" />
+          <circle cx="95" cy="90" r="1.5" fill="#D4B87A" opacity="0.65" />
         </svg>
       ) : (
         <svg
@@ -303,7 +303,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="8"
             transform="rotate(-45 30 160)"
             fill="#5A7A5A"
-            opacity="0.8"
+            opacity="0.95"
           />
           <ellipse
             cx="45"
@@ -312,7 +312,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="6"
             transform="rotate(-30 45 140)"
             fill="#6B8B6B"
-            opacity="0.9"
+            opacity="1"
           />
           <ellipse
             cx="55"
@@ -321,7 +321,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="7"
             transform="rotate(-50 55 120)"
             fill="#5A7A5A"
-            opacity="0.7"
+            opacity="0.85"
           />
           <ellipse
             cx="70"
@@ -330,7 +330,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="5"
             transform="rotate(-20 70 95)"
             fill="#7A9B7A"
-            opacity="0.8"
+            opacity="0.95"
           />
           <ellipse
             cx="85"
@@ -339,7 +339,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="6"
             transform="rotate(-40 85 70)"
             fill="#5A7A5A"
-            opacity="0.9"
+            opacity="1"
           />
           <ellipse
             cx="100"
@@ -348,7 +348,7 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="5"
             transform="rotate(-55 100 50)"
             fill="#6B8B6B"
-            opacity="0.7"
+            opacity="0.85"
           />
           <ellipse
             cx="115"
@@ -357,13 +357,13 @@ export function FloralDecoration({ position, variant = "simple" }: FloralDecorat
             ry="4"
             transform="rotate(-35 115 35)"
             fill="#5A7A5A"
-            opacity="0.8"
+            opacity="0.9"
           />
           
           {/* Small decorative dots */}
-          <circle cx="40" cy="150" r="2" fill="#C4A35A" opacity="0.5" />
-          <circle cx="75" cy="85" r="2" fill="#C4A35A" opacity="0.5" />
-          <circle cx="105" cy="45" r="2" fill="#C4A35A" opacity="0.4" />
+          <circle cx="40" cy="150" r="2" fill="#C4A35A" opacity="0.8" />
+          <circle cx="75" cy="85" r="2" fill="#C4A35A" opacity="0.8" />
+          <circle cx="105" cy="45" r="2" fill="#C4A35A" opacity="0.75" />
         </svg>
       )}
     </motion.div>

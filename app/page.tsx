@@ -29,8 +29,8 @@ export default function WeddingInvitation() {
       <AnimatePresence>
         {!showContent && (
           <motion.div
-            className="absolute inset-0 z-0 pointer-events-none"
-            initial={{ opacity: 1 }}
+            className="absolute inset-0 w-full h-screen z-0 pointer-events-none"
+            initial={{ opacity: 0.8 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
@@ -38,7 +38,8 @@ export default function WeddingInvitation() {
               src="/images/floral-decoration.png"
               alt="Decoração floral"
               fill
-              className="object-cover"
+              className="object-cover object-center"
+              style={{ objectFit: 'cover', transform: 'scaleY(1.3)' }}
               priority
             />
           </motion.div>
@@ -51,9 +52,9 @@ export default function WeddingInvitation() {
           <>
             {/* Top left corner - rotated left twice (-180deg) */}
             <motion.div
-              className="absolute top-0 left-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 opacity-40 -rotate-180"
+              className="absolute top-0 left-3 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 -scale-y-100"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
+              animate={{ opacity: 0.8 }}
               transition={{ duration: 0.5 }}
             >
               <Image
@@ -66,9 +67,9 @@ export default function WeddingInvitation() {
             
             {/* Top right corner - rotated right twice (180deg) */}
             <motion.div
-              className="absolute top-0 right-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 opacity-40 rotate-180"
+              className="absolute top-0 right-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 rotate-180"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
+              animate={{ opacity: 0.8 }}
               transition={{ duration: 0.5 }}
             >
               <Image
@@ -81,9 +82,9 @@ export default function WeddingInvitation() {
             
             {/* Bottom left corner - rotated left twice (-180deg) */}
             <motion.div
-              className="absolute bottom-0 left-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 opacity-40"
+              className="absolute bottom-0 left-3 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
+              animate={{ opacity: 0.8 }}
               transition={{ duration: 0.5 }}
             >
               <Image
@@ -96,9 +97,9 @@ export default function WeddingInvitation() {
             
             {/* Bottom right corner - rotated right twice (180deg) */}
             <motion.div
-              className="absolute bottom-0 right-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 opacity-40 -scale-x-100"
+              className="absolute bottom-0 right-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 -scale-x-100"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
+              animate={{ opacity: 0.8 }}
               transition={{ duration: 0.5 }}
             >
               <Image

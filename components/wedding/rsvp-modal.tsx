@@ -17,6 +17,10 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState("")
 
+  // Check if current date is past deadline (28/02/2026)
+  const deadline = new Date("2026-02-28T23:59:59")
+  const isDeadlinePassed = new Date() > deadline
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -48,8 +52,7 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
       setTimeout(() => {
         onClose()
         setIsSuccess(false)
-        setFirstName("")
-        setLastName("")
+        setFullName("")
       }, 2500)
     } catch {
       setError("Erro ao confirmar presença. Tente novamente.")
@@ -101,11 +104,19 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                   <Heart className="w-8 h-8 text-white" />
                 </div>
                 <h2 
-                  className="text-3xl text-[#C4A35A]"
+                  className="text-3xl text-[#C4A35A] mb-3"
                   style={{ fontFamily: 'var(--font-cursive)' }}
                 >
                   Confirme sua presença
                 </h2>
+                <p className="text-[#5A7A5A] text-sm">
+                  Confirmações até <span className="font-semibold text-[#2D4A3E]">28 de fevereiro de 2026</span>
+                </p>
+                {isDeadlinePassed && (
+                  <p className="text-red-600 text-sm mt-2 font-medium">
+                    Prazo para confirmação encerrado
+                  </p>
+                )}
               </div>
 
               {isSuccess ? (
@@ -130,9 +141,9 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                       id="fullName"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-[#D4B87A] bg-white text-[#2D4A3E] placeholder-[#5A7A5A]/50 focus:outline-none focus:ring-2 focus:ring-[#C4A35A] transition-shadow"
+                      className="w-full px-4 py-3 rounded-lg border border-[#D4B87A] bg-white text-[#2D4A3E] placeholder-[#5A7A5A]/50 focus:outline-none focus:ring-2 focus:ring-[#C4A35A] transition-shadow disabled:opacity-50 disabled:bg-gray-100"
                       placeholder="Nome e Sobrenome"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || isDeadlinePassed}
                     />
                   </div>
 
@@ -142,10 +153,10 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
 
                   <motion.button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isDeadlinePassed}
                     className="w-full py-3 px-6 bg-[#2D4A3E] text-white rounded-lg font-medium hover:bg-[#3d5a4c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={!isDeadlinePassed ? { scale: 1.02 } : {}}
+                    whileTap={!isDeadlinePassed ? { scale: 0.98 } : {}}
                   >
                     {isSubmitting ? (
                       <>
@@ -155,7 +166,7 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                     ) : (
                       <>
                         <Heart className="w-5 h-5" />
-                        Confirmar Presença
+                        {isDeadlinePassed ? "Prazo Encerrado" : "Confirmar Presença"}
                       </>
                     )}
                   </motion.button>
