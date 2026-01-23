@@ -64,9 +64,9 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
           className="text-5xl text-[#C4A35A] mb-6"
           style={{ fontFamily: 'var(--font-cursive)' }}
         >
-          Altamir Júnior <br/>
+          Gleise Ribeiro <br/>
           and <br/>
-          Gleise Ribeiro
+          Altamir Júnior
         </h1>
         <p 
           className="text-[#C4A35A] text-xl italic"
