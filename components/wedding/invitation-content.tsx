@@ -51,7 +51,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
       {/* Biblical quote */}
       <motion.div variants={itemVariants} className="mb-8">
         <p className="text-[#5A7A5A] text-md italic leading-relaxed">
-          De um passo de dança para a vida inteira
+          De um passo de dança para a vida inteira.
           Nossa jornada começou há 15 anos, entre passos de dança e sorrisos que o tempo só fez fortalecer. Há 11 anos, Deus nos concedeu a graça de construir um lar repleto de amor, cumplicidade e aprendizado.
           Hoje, com o coração transbordando gratidão, sentimos que é tempo de dar um novo passo. Decidimos consagrar nossa união e pedir a bênção do Senhor sobre nossa família.
           Você está convidado para celebrar conosco esse dia especial de fé, gratidão e alegria.

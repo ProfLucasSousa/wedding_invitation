@@ -30,7 +30,7 @@ export default function WeddingInvitation() {
         {!showContent && (
           <motion.div
             className="absolute inset-0 w-full h-screen z-0 pointer-events-none"
-            initial={{ opacity: 0.8 }}
+            initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
@@ -39,7 +39,7 @@ export default function WeddingInvitation() {
               alt="Decoração floral"
               fill
               className="object-cover object-center"
-              style={{ objectFit: 'cover', transform: 'scaleY(1.3)' }}
+              style={{ objectFit: 'cover', transform: 'scaleY(1.35) scaleX(0.99) translateY(-4%)' }}
               priority
             />
           </motion.div>
@@ -54,7 +54,7 @@ export default function WeddingInvitation() {
             <motion.div
               className="absolute top-0 left-3 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 -scale-y-100"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
               <Image
@@ -69,7 +69,7 @@ export default function WeddingInvitation() {
             <motion.div
               className="absolute top-0 right-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 rotate-180"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
               <Image
@@ -84,7 +84,7 @@ export default function WeddingInvitation() {
             <motion.div
               className="absolute bottom-0 left-3 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
               <Image
@@ -99,7 +99,7 @@ export default function WeddingInvitation() {
             <motion.div
               className="absolute bottom-0 right-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 -scale-x-100"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
               <Image
