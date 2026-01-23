@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Envelope } from "@/components/wedding/envelope"
 import { InvitationContent } from "@/components/wedding/invitation-content"
 import { RsvpModal } from "@/components/wedding/rsvp-modal"
-import { FloralDecoration } from "@/components/wedding/floral-decoration"
 import { Heart } from "lucide-react"
+import Image from "next/image"
 
 export default function WeddingInvitation() {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false)
@@ -25,11 +25,92 @@ export default function WeddingInvitation() {
       {/* Gold border effect */}
       <div className="absolute inset-0 border-8 border-[#D4B87A]/20 pointer-events-none z-10" />
       
-      {/* Floral decorations - more detailed when envelope is closed */}
-      <FloralDecoration position="top-left" variant={showContent ? "simple" : "detailed"} />
-      <FloralDecoration position="top-right" variant={showContent ? "simple" : "detailed"} />
-      <FloralDecoration position="bottom-left" variant={showContent ? "simple" : "detailed"} />
-      <FloralDecoration position="bottom-right" variant={showContent ? "simple" : "detailed"} />
+      {/* Floral decoration image - only on envelope screen */}
+      <AnimatePresence>
+        {!showContent && (
+          <motion.div
+            className="absolute inset-0 z-0 pointer-events-none"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Image
+              src="/images/floral-decoration.png"
+              alt="Decoração floral"
+              fill
+              className="object-cover"
+              priority
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floral corner decorations - only on invitation content screen */}
+      <AnimatePresence>
+        {showContent && (
+          <>
+            {/* Top left corner - rotated left twice (-180deg) */}
+            <motion.div
+              className="absolute top-0 left-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 opacity-40 -rotate-180"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Image
+                src="/images/floral-corner.png"
+                alt=""
+                fill
+                className="object-contain object-left-top"
+              />
+            </motion.div>
+            
+            {/* Top right corner - rotated right twice (180deg) */}
+            <motion.div
+              className="absolute top-0 right-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 opacity-40 rotate-180"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Image
+                src="/images/floral-corner.png"
+                alt=""
+                fill
+                className="object-contain object-right-top"
+              />
+            </motion.div>
+            
+            {/* Bottom left corner - rotated left twice (-180deg) */}
+            <motion.div
+              className="absolute bottom-0 left-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 opacity-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Image
+                src="/images/floral-corner.png"
+                alt=""
+                fill
+                className="object-contain object-left-bottom"
+              />
+            </motion.div>
+            
+            {/* Bottom right corner - rotated right twice (180deg) */}
+            <motion.div
+              className="absolute bottom-0 right-0 w-32 h-44 md:w-40 md:h-56 pointer-events-none z-0 opacity-40 -scale-x-100"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Image
+                src="/images/floral-corner.png"
+                alt=""
+                fill
+                className="object-contain object-right-bottom"
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Main content container */}
       <div className="relative z-5 min-h-screen flex flex-col items-center justify-center px-4 py-8">

@@ -31,7 +31,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
 
   return (
     <motion.div
-      className="w-full max-w-md mx-auto px-6 pt-16 pb-8 text-center"
+      className="w-full max-w-md mx-auto px-6 pt-16 pb-8 text-center relative z-10"
       variants={containerVariants}
       initial="hidden"
       animate={isVisible ? "visible" : "hidden"}
@@ -74,7 +74,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
           style={{ fontFamily: 'var(--font-cursive)' }}
         >
           Altamir Júnior <br/>
-          e <br/>
+          and <br/>
           Gleise Ribeiro
         </h1>
         <p 
@@ -88,13 +88,13 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
       {/* Date */}
       <motion.div variants={itemVariants} className="mb-6">
         <p className="text-4xl font-semibold text-[#2D4A3E] tracking-wider">
-          21.03.2026
+          21 março 2026
         </p>
         <p className="text-[#5A7A5A] mt-2 uppercase tracking-widest text-sm">
           Sábado às 18h00
         </p>
         <p className="text-[#5A7A5A] text-sm mt-1">
-          Local: Igreja São José
+          Local: Paróquia Nossa Senhora de Lourdes
         </p>
       </motion.div>
 
@@ -102,7 +102,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
       <motion.div variants={itemVariants} className="flex justify-center gap-6 my-8">
         {/* Ceremony location */}
         <motion.a
-          href="https://maps.google.com"
+          href="https://maps.app.goo.gl/gvyvmwM1VUyFVwVL9"
           target="_blank"
           rel="noopener noreferrer"
           className="w-16 h-16 rounded-full bg-[#2D4A3E] flex items-center justify-center shadow-lg hover:bg-[#3d5a4c] transition-colors"
@@ -115,7 +115,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
 
         {/* Reception location */}
         <motion.a
-          href="https://maps.google.com"
+          href="https://maps.app.goo.gl/aZDPaZbxSvNPac169"
           target="_blank"
           rel="noopener noreferrer"
           className="w-16 h-16 rounded-full bg-[#2D4A3E] flex items-center justify-center shadow-lg hover:bg-[#3d5a4c] transition-colors"
