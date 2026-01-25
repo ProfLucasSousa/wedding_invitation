@@ -2,25 +2,25 @@ import { NextResponse } from "next/server"
 
 // In-memory storage for RSVPs (in production, use a database)
 const rsvpList: Array<{
-  fullName: string
+  names: string[]
   confirmedAt: string
 }> = []
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { fullName, confirmedAt } = body
+    const { names, confirmedAt } = body
 
-    if (!fullName) {
+    if (!names || !Array.isArray(names) || names.length === 0) {
       return NextResponse.json(
-        { error: "Nome completo é obrigatório" },
+        { error: "Pelo menos um nome deve ser selecionado" },
         { status: 400 }
       )
     }
 
     // Store the RSVP locally
     const rsvpData = {
-      fullName,
+      names,
       confirmedAt: confirmedAt || new Date().toISOString(),
     }
     

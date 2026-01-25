@@ -13,6 +13,10 @@ Este projeto é um convite de casamento digital desenvolvido para proporcionar u
 
 - **Envelope Interativo**: Envelope realista com animação de abertura e selo de cera personalizado
 - **Design Elegante**: Decorações florais personalizadas com imagens de alta qualidade
+- **Sistema de Confirmação Inteligente**:
+  - Autocomplete com validação de convidados
+  - Seleção múltipla de nomes
+  - Apenas convidados da lista podem confirmar presença
 - **Confirmação com Prazo**: Sistema de RSVP com prazo limite (28/02/2026)
 - **Responsivo**: Totalmente adaptável para diferentes dispositivos
 - **Animações Suaves**: Transições e animações com Framer Motion
@@ -47,14 +51,25 @@ Este projeto é um convite de casamento digital desenvolvido para proporcionar u
 
 ### Sistema de Confirmação de Presença
 
-O projeto implementa um fluxo completo de confirmação de presença com prazo limite:
+O projeto implementa um sistema robusto de confirmação de presença com validação e prazo limite:
 
-1. **Modal de Confirmação**: Os convidados preenchem um formulário no modal com suas informações
-2. **Validação de Prazo**: O sistema verifica automaticamente se ainda está dentro do prazo (até 28/02/2026)
-3. **Validação de Dados**: Os dados são validados usando React Hook Form + Zod
-4. **Webhook**: Ao submeter, os dados são enviados para um webhook via API Route
-5. **Make.com**: O webhook aciona um cenário no Make que processa as informações
-6. **Planilha**: Os dados são automaticamente gravados em uma planilha (Google Sheets/Excel)
+1. **Lista de Convidados**: Arquivo JSON (`convidados.json`) contém todos os nomes autorizados
+2. **Autocomplete Inteligente**: 
+   - Enquanto digita, o sistema filtra e sugere nomes da lista
+   - Exclui automaticamente nomes já selecionados
+   - Busca case-insensitive em qualquer parte do nome
+3. **Seleção Múltipla**:
+   - Possibilidade de selecionar vários convidados de uma vez
+   - Chips visuais exibem os nomes selecionados acima do input
+   - Fácil remoção individual através do botão X em cada chip
+4. **Validação Rigorosa**:
+   - Apenas nomes existentes na lista podem ser selecionados
+   - Botão de confirmação só habilita com pelo menos 1 nome selecionado
+   - Impossível confirmar presença sem selecionar da lista
+5. **Verificação de Prazo**: O sistema verifica automaticamente se ainda está dentro do prazo (até 28/02/2026)
+6. **Webhook**: Ao submeter, os dados são enviados para um webhook via API Route
+7. **Make.com**: O webhook aciona um cenário no Make que processa as informações
+8. **Planilha**: Os dados são automaticamente gravados em uma planilha (Google Sheets/Excel)
 
 ### Recursos Visuais
 
@@ -69,15 +84,19 @@ O projeto implementa um fluxo completo de confirmação de presença com prazo l
 ### Arquitetura da Integração
 
 ```bash
-[Modal de Confirmação] 
+[Lista de Convidados (JSON)]
+    ↓
+[Autocomplete com Filtro]
+    ↓
+[Seleção Múltipla de Nomes]
+    ↓
+[Validação: Nomes existem na lista?]
     ↓
 [Verificação de Prazo (28/02/2026)]
     ↓
-[Validação (Zod + React Hook Form)]
-    ↓
 [API Route (/api/rsvp)]
     ↓
-[Webhook HTTP POST]
+[Webhook HTTP POST com array de nomes]
     ↓
 [Make.com - Automação]
     ↓
@@ -103,14 +122,15 @@ wedding_invitation/
 │   ├── page.tsx             # Página principal com envelope e convite
 │   ├── layout.tsx           # Layout global
 │   ├── globals.css          # Estilos globais
+│   ├── convidados.json      # Lista de convidados autorizados
 │   └── api/
 │       └── rsvp/
-│           └── route.ts     # API Route para confirmações
+│           └── route.ts     # API Route para confirmações (array de nomes)
 ├── components/               # Componentes React reutilizáveis
 │   ├── wedding/
 │   │   ├── envelope.tsx     # Componente do envelope interativo
 │   │   ├── invitation-content.tsx  # Conteúdo do convite
-│   │   ├── rsvp-modal.tsx   # Modal de confirmação com prazo
+│   │   ├── rsvp-modal.tsx   # Modal com autocomplete e seleção múltipla
 │   │   └── floral-decoration.tsx   # Decorações florais (backup SVG)
 │   └── theme-provider.tsx   # Provider de temas
 ├── lib/                      # Utilitários e helpers
@@ -155,22 +175,43 @@ pnpm start
 
 ## 🔗 Integração com Make.com
 
+### Configuração do Webhook
+
 Para configurar a integração com Make:
 
 1. Crie um novo cenário no Make.com
 2. Configure um webhook como trigger
 3. Conecte com Google Sheets (ou outra planilha)
 4. Mapeie os campos do formulário para as colunas da planilha
-5. Atualize a URL do webhook no código do modal
+5. Configure a variável de ambiente `WEBHOOK_URL` na Vercel
 
 ### Exemplo de Payload do Webhook
 
 ```json
 {
-  "fullName": "Nome Completo do Convidado",
-  "confirmedAt": "2026-01-23T10:30:00.000Z"
+  "names": [
+    "Ana Silva",
+    "João Pereira",
+    "Maria Santos"
+  ],
+  "confirmedAt": "2026-01-23T10:30:00.000Z",
+  "source": "wedding-invitation"
 }
 ```
+
+**Observações**:
+- O campo `names` agora é um array contendo múltiplos nomes
+- Cada confirmação pode incluir vários convidados simultaneamente
+- O webhook recebe todos os nomes selecionados de uma vez
+
+### Gerenciamento da Lista de Convidados
+
+Para adicionar ou remover convidados autorizados:
+
+1. Edite o arquivo `app/convidados.json`
+2. Adicione ou remova nomes do array `convidados`
+3. Mantenha o formato: `["Nome Completo", "Outro Nome", ...]`
+4. O autocomplete será atualizado automaticamente
 
 ### Prazo de Confirmação
 
