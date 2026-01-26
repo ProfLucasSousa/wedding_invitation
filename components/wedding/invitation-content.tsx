@@ -82,7 +82,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
           21 março 2026
         </p>
         <p className="text-[#5A7A5A] mt-2 tracking-widest text-sm">
-          Sábado às 18h00
+          Sábado às 17h30
         </p>
         <p className="text-[#5A7A5A] text-sm mt-1">
           Local: Paróquia Nossa Senhora de Lourdes
