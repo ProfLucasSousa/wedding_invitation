@@ -51,13 +51,14 @@ Este projeto é um convite de casamento digital desenvolvido para proporcionar u
 
 ### Sistema de Confirmação de Presença
 
-O projeto implementa um sistema robusto de confirmação de presença com validação e prazo limite:
+O projeto implementa um sistema robusto de confirmação de presença com validação, prazo limite e integração com Google Sheets:
 
 1. **Lista de Convidados**: Arquivo JSON (`convidados.json`) contém todos os nomes autorizados
 2. **Autocomplete Inteligente**: 
    - Enquanto digita, o sistema filtra e sugere nomes da lista
    - Exclui automaticamente nomes já selecionados
    - Busca case-insensitive em qualquer parte do nome
+   - **Nomes já confirmados aparecem em cinza e não podem ser selecionados novamente**
 3. **Seleção Múltipla**:
    - Possibilidade de selecionar vários convidados de uma vez
    - Chips visuais exibem os nomes selecionados acima do input
@@ -66,10 +67,16 @@ O projeto implementa um sistema robusto de confirmação de presença com valida
    - Apenas nomes existentes na lista podem ser selecionados
    - Botão de confirmação só habilita com pelo menos 1 nome selecionado
    - Impossível confirmar presença sem selecionar da lista
-5. **Verificação de Prazo**: O sistema verifica automaticamente se ainda está dentro do prazo (até 28/02/2026)
-6. **Webhook**: Ao submeter, os dados são enviados para um webhook via API Route
-7. **Make.com**: O webhook aciona um cenário no Make que processa as informações
-8. **Planilha**: Os dados são automaticamente gravados em uma planilha (Google Sheets/Excel)
+   - Impossível selecionar nomes já confirmados
+5. **Integração com Google Sheets**:
+   - Sistema busca automaticamente nomes já confirmados da planilha
+   - Exibe nomes confirmados com texto riscado e cinza
+   - Etiqueta "(confirmado)" ao lado de nomes já processados
+   - Atualização em tempo real via Google Apps Script
+6. **Verificação de Prazo**: O sistema verifica automaticamente se ainda está dentro do prazo (até 28/02/2026)
+7. **Webhook**: Ao submeter, os dados são enviados para um webhook do Make.com via API Route
+8. **Make.com**: O webhook aciona um cenário no Make que processa as informações
+9. **Planilha**: Os dados são automaticamente gravados em Google Sheets
 
 ### Recursos Visuais
 
@@ -88,7 +95,11 @@ O projeto implementa um sistema robusto de confirmação de presença com valida
     ↓
 [Autocomplete com Filtro]
     ↓
-[Seleção Múltipla de Nomes]
+[Google Sheets API - Busca nomes confirmados]
+    ↓
+[Exibe confirmados em cinza e bloqueados]
+    ↓
+[Seleção Múltipla de Nomes disponíveis]
     ↓
 [Validação: Nomes existem na lista?]
     ↓
@@ -100,7 +111,7 @@ O projeto implementa um sistema robusto de confirmação de presença com valida
     ↓
 [Make.com - Automação]
     ↓
-[Planilha (Google Sheets)]
+[Google Sheets - Registro de confirmações]
 ```
 
 ## 🎨 Assets e Recursos Visuais
@@ -125,12 +136,12 @@ wedding_invitation/
 │   ├── convidados.json      # Lista de convidados autorizados
 │   └── api/
 │       └── rsvp/
-│           └── route.ts     # API Route para confirmações (array de nomes)
+│           └── route.ts     # API Route para confirmações e busca de confirmados
 ├── components/               # Componentes React reutilizáveis
 │   ├── wedding/
 │   │   ├── envelope.tsx     # Componente do envelope interativo
 │   │   ├── invitation-content.tsx  # Conteúdo do convite
-│   │   ├── rsvp-modal.tsx   # Modal com autocomplete e seleção múltipla
+│   │   ├── rsvp-modal.tsx   # Modal com autocomplete e validação de confirmados
 │   │   └── floral-decoration.tsx   # Decorações florais (backup SVG)
 │   └── theme-provider.tsx   # Provider de temas
 ├── lib/                      # Utilitários e helpers
@@ -140,7 +151,10 @@ wedding_invitation/
 │       ├── floral-corner.png
 │       ├── wedding-ring.png
 │       └── signet.png
+├── google-apps-script/       # Scripts do Google Sheets
+│   └── Code.gs              # Apps Script para buscar nomes confirmados
 ├── styles/                   # Estilos globais
+├── .env.local               # Variáveis de ambiente (Google Sheets + Webhook)
 ├── components.json           # Configuração do Shadcn/ui
 └── package.json              # Dependências do projeto
 ```
@@ -163,6 +177,9 @@ O projeto está hospedado na Vercel com deploy contínuo configurado:
 # Instalar dependências
 pnpm install
 
+# Configurar variáveis de ambiente
+# Crie o arquivo .env.local com SHEETS_API_URL e WEBHOOK_URL
+
 # Executar em modo de desenvolvimento
 pnpm dev
 
@@ -173,9 +190,29 @@ pnpm build
 pnpm start
 ```
 
-## 🔗 Integração com Make.com
+### Requisitos
 
-### Configuração do Webhook
+- Node.js 18+ 
+- pnpm (ou npm/yarn)
+- Conta Google (para Google Sheets)
+- Conta Make.com (para automação do webhook)
+
+## 🔗 Integração com Google Sheets e Make.com
+
+### Configuração do Google Apps Script
+
+1. **Acesse sua planilha no Google Sheets**
+2. Vá em **Extensões > Apps Script**
+3. Cole o código do arquivo `google-apps-script/Code.gs`
+4. Clique em **Implantar > Nova implantação**
+5. Selecione tipo: **Aplicativo da Web**
+6. Configure:
+   - **Executar como**: "Eu"
+   - **Quem tem acesso**: "Qualquer pessoa"
+7. Clique em **Implantar** e copie a URL gerada
+8. Cole a URL no arquivo `.env.local` na variável `SHEETS_API_URL`
+
+### Configuração do Webhook (Make.com)
 
 Para configurar a integração com Make:
 
@@ -183,7 +220,19 @@ Para configurar a integração com Make:
 2. Configure um webhook como trigger
 3. Conecte com Google Sheets (ou outra planilha)
 4. Mapeie os campos do formulário para as colunas da planilha
-5. Configure a variável de ambiente `WEBHOOK_URL` na Vercel
+5. Configure a variável de ambiente `WEBHOOK_URL` no arquivo `.env.local`
+
+### Variáveis de Ambiente
+
+Crie um arquivo `.env.local` na raiz do projeto:
+
+```bash
+# URL do Google Apps Script para buscar confirmados
+SHEETS_API_URL=https://script.google.com/macros/s/SEU_ID_AQUI/exec
+
+# URL do webhook do Make.com para registrar confirmações
+WEBHOOK_URL=https://hook.us2.make.com/SEU_WEBHOOK_AQUI
+```
 
 ### Exemplo de Payload do Webhook
 
@@ -200,9 +249,10 @@ Para configurar a integração com Make:
 ```
 
 **Observações**:
-- O campo `names` agora é um array contendo múltiplos nomes
+- O campo `names` é um array contendo múltiplos nomes
 - Cada confirmação pode incluir vários convidados simultaneamente
 - O webhook recebe todos os nomes selecionados de uma vez
+- A planilha deve ter os nomes na coluna A para o script funcionar corretamente
 
 ### Gerenciamento da Lista de Convidados
 

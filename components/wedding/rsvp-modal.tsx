@@ -15,6 +15,7 @@ interface RsvpModalProps {
 export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
   const [inputValue, setInputValue] = useState("")
   const [selectedNames, setSelectedNames] = useState<string[]>([])
+  const [confirmedNames, setConfirmedNames] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState("")
@@ -26,6 +27,25 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
   // Check if current date is past deadline (28/02/2026)
   const deadline = new Date("2026-02-28T23:59:59")
   const isDeadlinePassed = new Date() > deadline
+
+  // Fetch confirmed names when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      fetchConfirmedNames()
+    }
+  }, [isOpen])
+
+  const fetchConfirmedNames = async () => {
+    try {
+      const response = await fetch('/api/rsvp?type=confirmed-names')
+      if (response.ok) {
+        const data = await response.json()
+        setConfirmedNames(data.confirmedNames || [])
+      }
+    } catch (error) {
+      console.error('Erro ao buscar nomes confirmados:', error)
+    }
+  }
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -68,6 +88,11 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
 
   // Handle suggestion selection
   const handleSelectSuggestion = (nome: string) => {
+    // Don't allow selecting confirmed names
+    if (confirmedNames.includes(nome)) {
+      return
+    }
+    
     if (!selectedNames.includes(nome)) {
       setSelectedNames([...selectedNames, nome])
     }
@@ -253,16 +278,27 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                           exit={{ opacity: 0, y: -10 }}
                           transition={{ duration: 0.2 }}
                         >
-                          {suggestions.map((nome, index) => (
-                            <button
-                              key={index}
-                              type="button"
-                              onClick={() => handleSelectSuggestion(nome)}
-                              className="w-full px-4 py-3 text-left text-[#2D4A3E] hover:bg-[#F5F0E8] transition-colors border-b border-[#D4B87A]/20 last:border-b-0"
-                            >
-                              {nome}
-                            </button>
-                          ))}
+                          {suggestions.map((nome, index) => {
+                            const isConfirmed = confirmedNames.includes(nome)
+                            return (
+                              <button
+                                key={index}
+                                type="button"
+                                onClick={() => handleSelectSuggestion(nome)}
+                                disabled={isConfirmed}
+                                className={`w-full px-4 py-3 text-left transition-colors border-b border-[#D4B87A]/20 last:border-b-0 ${
+                                  isConfirmed
+                                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed line-through'
+                                    : 'text-[#2D4A3E] hover:bg-[#F5F0E8] cursor-pointer'
+                                }`}
+                              >
+                                {nome}
+                                {isConfirmed && (
+                                  <span className="ml-2 text-xs text-gray-500">(confirmado)</span>
+                                )}
+                              </button>
+                            )
+                          })}
                         </motion.div>
                       )}
                     </AnimatePresence>

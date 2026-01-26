@@ -132,7 +132,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
       {/* Icon labels */}
       <motion.div variants={itemVariants} className="flex justify-center gap-6 mb-8">
         <span className="w-16 text-[#5A7A5A] text-xs text-center">Cerimônia</span>
-        <span className="w-16 text-[#5A7A5A] text-xs text-center">Recepção</span>
+        <span className="w-16 text-[#5A7A5A] text-xs text-center">Recepção <br/> Jantar</span>
         <span className="w-16 text-[#5A7A5A] text-xs text-center">Confirmar</span>
       </motion.div>
 

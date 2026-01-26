@@ -1,11 +1,5 @@
 import { NextResponse } from "next/server"
 
-// In-memory storage for RSVPs (in production, use a database)
-const rsvpList: Array<{
-  names: string[]
-  confirmedAt: string
-}> = []
-
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -18,13 +12,11 @@ export async function POST(request: Request) {
       )
     }
 
-    // Store the RSVP locally
+    // Prepare RSVP data
     const rsvpData = {
       names,
       confirmedAt: confirmedAt || new Date().toISOString(),
     }
-    
-    rsvpList.push(rsvpData)
 
     // Send to webhook if WEBHOOK_URL is configured
     const webhookUrl = process.env.WEBHOOK_URL
@@ -46,9 +38,8 @@ export async function POST(request: Request) {
         if (webhookResponse.ok) {
           webhookSuccess = true
         }
-        // Silently ignore webhook failures - RSVP is already saved locally
-      } catch {
-        // Silently ignore webhook errors - RSVP is already saved locally
+      } catch (error) {
+        console.error('Erro ao enviar webhook:', error)
       }
     }
 
@@ -69,10 +60,45 @@ export async function POST(request: Request) {
   }
 }
 
-// GET endpoint to retrieve all RSVPs (for testing/admin purposes)
-export async function GET() {
+// GET endpoint to retrieve confirmed names from Google Sheets
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const type = searchParams.get('type')
+  
+  if (type === 'confirmed-names') {
+    // Try to fetch from Google Sheets
+    const sheetsApiUrl = process.env.SHEETS_API_URL
+    
+    if (sheetsApiUrl) {
+      try {
+        const response = await fetch(sheetsApiUrl, {
+          method: 'GET',
+          cache: 'no-store' // Sempre buscar dados frescos
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          // Confiar nos dados do Sheets, mesmo que esteja vazio
+          return NextResponse.json({
+            confirmedNames: data.confirmedNames || [],
+            source: 'google-sheets'
+          })
+        }
+      } catch (error) {
+        console.error('Erro ao buscar do Google Sheets:', error)
+      }
+    }
+    
+    // Fallback apenas se houver erro ou Sheets não configurado
+    return NextResponse.json({
+      confirmedNames: [],
+      source: 'no-sheets-configured'
+    })
+  }
+  
+  // Default: return empty list
   return NextResponse.json({
-    total: rsvpList.length,
-    confirmations: rsvpList,
+    total: 0,
+    confirmations: [],
   })
 }
