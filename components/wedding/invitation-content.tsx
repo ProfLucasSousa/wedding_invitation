@@ -50,7 +50,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
 
       {/* Biblical quote */}
       <motion.div variants={itemVariants} className="mb-8">
-        <p className="text-[#5A7A5A] text-md italic leading-relaxed">
+        <p className="text-[#5A7A5A] text-xl font-semibold italic leading-relaxed">
           De um passo de dança para a vida inteira.
           Nossa jornada começou há 15 anos, entre passos de dança e sorrisos que o tempo só fez fortalecer. Há 11 anos, Deus nos concedeu a graça de construir um lar repleto de amor, cumplicidade e aprendizado.
           Hoje, com o coração transbordando gratidão, sentimos que é tempo de dar um novo passo. Decidimos consagrar nossa união e pedir a bênção do Senhor sobre nossa família.
@@ -61,7 +61,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
       {/* Names */}
       <motion.div variants={itemVariants} className="mb-6">
         <h1 
-          className="text-5xl text-[#C4A35A] mb-6"
+          className="text-6xl text-[#C4A35A] mb-6"
           style={{ fontFamily: 'var(--font-cursive)' }}
         >
           Gleise Ribeiro <br/>
@@ -69,7 +69,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
           Altamir Júnior
         </h1>
         <p 
-          className="text-[#C4A35A] text-xl italic"
+          className="text-[#C4A35A] text-3xl italic"
           style={{ fontFamily: 'var(--font-cursive)' }}
         >
           Convidam para seu casamento
@@ -78,13 +78,13 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
 
       {/* Date */}
       <motion.div variants={itemVariants} className="mb-6">
-        <p className="text-4xl font-semibold text-[#2D4A3E] tracking-wider">
+        <p className="text-5xl font-semibold text-[#2D4A3E] tracking-wider">
           21 março 2026
         </p>
-        <p className="text-[#5A7A5A] mt-2 tracking-widest text-sm">
+        <p className="text-[#5A7A5A] mt-2 tracking-widest text-xl font-semibold">
           Sábado às 17h30
         </p>
-        <p className="text-[#5A7A5A] text-sm mt-1">
+        <p className="text-[#5A7A5A] text-xl mt-1 font-semibold">
           Local: Paróquia Nossa Senhora de Lourdes
         </p>
       </motion.div>
@@ -131,15 +131,15 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
 
       {/* Icon labels */}
       <motion.div variants={itemVariants} className="flex justify-center gap-6 mb-8">
-        <span className="w-16 text-[#5A7A5A] text-xs text-center">Cerimônia</span>
-        <span className="w-16 text-[#5A7A5A] text-xs text-center">Recepção <br/> Jantar</span>
-        <span className="w-16 text-[#5A7A5A] text-xs text-center">Confirmar</span>
+        <span className="w-16 text-[#5A7A5A] text-md text-center font-semibold">Cerimônia</span>
+        <span className="w-16 text-[#5A7A5A] text-md text-center font-semibold">Recepção <br/> Jantar</span>
+        <span className="w-16 text-[#5A7A5A] text-md text-center font-semibold">Confirmar</span>
       </motion.div>
 
       {/* Footer message */}
       <motion.p 
         variants={itemVariants}
-        className="text-2xl text-[#C4A35A]"
+        className="text-4xl text-[#C4A35A]"
         style={{ fontFamily: 'var(--font-cursive)' }}
       >
         Esperamos por você!

@@ -132,11 +132,11 @@ export default function WeddingInvitation() {
                 transition={{ duration: 0.6 }}
               >
                 <h1 
-                  className="text-4xl md:text-5xl text-[#2D4A3E] flex items-center justify-center gap-2"
+                  className="text-6xl md:text-5xl text-[#2D4A3E] flex items-center justify-center gap-2"
                   style={{ fontFamily: 'var(--font-cursive)' }}
                 >
                   Gleise Ribeiro
-                  <Heart className="w-6 h-6 text-[#C4A35A] fill-[#C4A35A]" />
+                  <Heart className="w-20 h-20 text-[#C4A35A] fill-[#C4A35A]" />
                   Altamir Júnior
                 </h1>
               </motion.div>

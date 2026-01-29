@@ -96,7 +96,7 @@ export function Envelope({ isOpen, onSealClick }: EnvelopeProps) {
 
       {/* Click indicator */}
       <motion.p
-        className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[#2D4A3E] text-sm font-medium tracking-wider"
+        className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[#2D4A3E] text-xl font-semibold font-medium tracking-wider"
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2, repeat: Infinity }}
       >

@@ -192,16 +192,16 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                   <Heart className="w-8 h-8 text-white" />
                 </div>
                 <h2 
-                  className="text-3xl text-[#C4A35A] mb-3"
+                  className="text-4xl text-[#C4A35A] mb-3"
                   style={{ fontFamily: 'var(--font-cursive)' }}
                 >
                   Confirmação de presença
                 </h2>
-                <p className="text-[#5A7A5A] text-sm">
+                <p className="text-[#5A7A5A] text-xl">
                   Confirmações até <span className="font-semibold text-[#2D4A3E]">28 de fevereiro de 2026</span>
                 </p>
                 {isDeadlinePassed && (
-                  <p className="text-red-600 text-sm mt-2 font-medium">
+                  <p className="text-red-600 text-xl mt-2 font-medium">
                     Prazo para confirmação encerrado
                   </p>
                 )}
@@ -217,7 +217,7 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                   <p className="text-[#2D4A3E] text-lg font-medium">
                     Presença confirmada!
                   </p>
-                  <p className="text-[#5A7A5A] text-sm mt-2">
+                  <p className="text-[#5A7A5A] text-lg mt-2">
                     Obrigado, esperamos você!
                   </p>
                 </motion.div>
