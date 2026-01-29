@@ -288,11 +288,13 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                                 disabled={isConfirmed}
                                 className={`w-full px-4 py-3 text-left transition-colors border-b border-[#D4B87A]/20 last:border-b-0 ${
                                   isConfirmed
-                                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed line-through'
+                                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
                                     : 'text-[#2D4A3E] hover:bg-[#F5F0E8] cursor-pointer'
                                 }`}
                               >
-                                {nome}
+                                <span className={isConfirmed ? 'line-through' : ''}>
+                                  {nome}
+                                </span>
                                 {isConfirmed && (
                                   <span className="ml-2 text-xs text-gray-500">(confirmado)</span>
                                 )}
