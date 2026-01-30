@@ -14,15 +14,12 @@ interface RsvpModalProps {
 
 export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
   const [inputValue, setInputValue] = useState("")
-  const [selectedNames, setSelectedNames] = useState<string[]>([])
   const [confirmedNames, setConfirmedNames] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
   const [error, setError] = useState("")
-  const [suggestions, setSuggestions] = useState<string[]>([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const suggestionsRef = useRef<HTMLDivElement>(null)
 
   // Check if current date is past deadline (28/02/2026)
   const deadline = new Date("2026-02-28T23:59:59")
@@ -32,6 +29,11 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
   useEffect(() => {
     if (isOpen) {
       fetchConfirmedNames()
+      // Reset states when modal opens
+      setIsSuccess(false)
+      setSuccessMessage("")
+      setInputValue("")
+      setError("")
     }
   }, [isOpen])
 
@@ -47,78 +49,125 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
     }
   }
 
-  // Close suggestions when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
-      ) {
-        setShowSuggestions(false)
-      }
-    }
+  // Normalize string for comparison (lowercase, remove extra spaces)
+  const normalizeString = (str: string): string => {
+    return str.toLowerCase().trim().replace(/\s+/g, ' ')
+  }
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
-
-  // Handle input change and filter suggestions
-  const handleInputChange = (value: string) => {
-    setInputValue(value)
-
-    if (value.trim().length === 0) {
-      setSuggestions([])
-      setShowSuggestions(false)
-      return
-    }
-
-    // Filter suggestions - exclude already selected names
-    const filtered = convidadosData.convidados.filter((nome) =>
-      nome.toLowerCase().includes(value.toLowerCase()) &&
-      !selectedNames.includes(nome)
+  // Validate a single name against the guest list
+  const validateName = (name: string): { valid: boolean; matchedName?: string; suggestion?: string; isConfirmed?: boolean } => {
+    const normalizedInput = normalizeString(name)
+    
+    // Check if already confirmed first
+    const confirmedMatch = confirmedNames.find(
+      (confirmedName) => normalizeString(confirmedName) === normalizedInput
     )
     
-    setSuggestions(filtered)
-    setShowSuggestions(filtered.length > 0)
-  }
-
-  // Handle suggestion selection
-  const handleSelectSuggestion = (nome: string) => {
-    // Don't allow selecting confirmed names
-    if (confirmedNames.includes(nome)) {
-      return
+    if (confirmedMatch) {
+      return { valid: false, suggestion: `${confirmedMatch} já teve presença confirmada anteriormente`, isConfirmed: true }
     }
     
-    if (!selectedNames.includes(nome)) {
-      setSelectedNames([...selectedNames, nome])
+    // Exact match (case-insensitive)
+    const exactMatch = convidadosData.convidados.find(
+      (convidado) => normalizeString(convidado) === normalizedInput
+    )
+    
+    if (exactMatch) {
+      return { valid: true, matchedName: exactMatch }
     }
-    setInputValue("")
-    setShowSuggestions(false)
-    setSuggestions([])
-    setError("")
-    inputRef.current?.focus()
-  }
-
-  // Handle removing a selected name
-  const handleRemoveName = (nome: string) => {
-    setSelectedNames(selectedNames.filter((n) => n !== nome))
+    
+    // Try to find similar name (fuzzy match)
+    const similarName = convidadosData.convidados.find(
+      (convidado) => normalizeString(convidado).includes(normalizedInput) ||
+                     normalizedInput.includes(normalizeString(convidado))
+    )
+    
+    if (similarName) {
+      // Check if the similar name is already confirmed
+      const isSimilarConfirmed = confirmedNames.some(
+        (confirmedName) => normalizeString(confirmedName) === normalizeString(similarName)
+      )
+      
+      if (isSimilarConfirmed) {
+        return { valid: false, suggestion: `"${similarName}" já teve presença confirmada anteriormente` }
+      }
+    }
+    
+    return { valid: false }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (selectedNames.length === 0) {
-      setError("Por favor, selecione pelo menos um nome da lista.")
+    if (!inputValue.trim()) {
+      setError("Por favor, digite pelo menos um nome.")
       return
     }
 
     setIsSubmitting(true)
     setError("")
 
+    // Split by comma or semicolon and clean up
+    const inputNames = inputValue
+      .split(/[,;]+/)
+      .map(name => name.trim())
+      .filter(name => name.length > 0)
+    
+    if (inputNames.length === 0) {
+      setError("Por favor, digite pelo menos um nome válido.")
+      setIsSubmitting(false)
+      return
+    }
+
+    // Validate all names
+    const validatedNames: string[] = []
+    const invalidNames: string[] = []
+    const confirmedAgainNames: string[] = []
+    const suggestions: string[] = []
+
+    for (const name of inputNames) {
+      const validation = validateName(name)
+      
+      if (validation.valid && validation.matchedName) {
+        // Avoid duplicates
+        if (!validatedNames.includes(validation.matchedName)) {
+          validatedNames.push(validation.matchedName)
+        }
+      } else {
+        if (validation.isConfirmed) {
+          confirmedAgainNames.push(name)
+        } else {
+          invalidNames.push(name)
+        }
+        
+        if (validation.suggestion) {
+          suggestions.push(validation.suggestion)
+        }
+      }
+    }
+
+    // If no valid names to confirm at all, show error
+    if (validatedNames.length === 0) {
+      let errorMessage = ""
+      
+      if (invalidNames.length > 0) {
+        errorMessage = `Nome(s) não encontrado(s)\n${invalidNames.join(", ")}`
+        if (suggestions.length > 0) {
+          errorMessage += `\n\n${suggestions.join("\n")}`
+        }
+      }
+      
+      if (confirmedAgainNames.length > 0) {
+        if (errorMessage) errorMessage += "\n\n"
+        errorMessage += `✓ Presença já confirmada anteriormente:\n${confirmedAgainNames.join(", ")}`
+      }
+      
+      setError(errorMessage || "Nenhum nome válido para confirmar.")
+      setIsSubmitting(false)
+      return
+    }
+
+    // If there are valid names to submit, proceed and inform about issues
     try {
       const response = await fetch("/api/rsvp", {
         method: "POST",
@@ -126,24 +175,42 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          names: selectedNames,
+          names: validatedNames,
           confirmedAt: new Date().toISOString(),
         }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error("Erro ao confirmar presença")
+        throw new Error(data.error || "Erro ao confirmar presença")
       }
 
+      // Show success message with info about issues if any
       setIsSuccess(true)
-      setTimeout(() => {
-        onClose()
-        setIsSuccess(false)
-        setSelectedNames([])
-        setInputValue("")
-      }, 2500)
-    } catch {
-      setError("Erro ao confirmar presença. Tente novamente.")
+      
+      // Build message about problems that occurred
+      let infoMessage = ""
+      
+      if (confirmedAgainNames.length > 0) {
+        infoMessage += `ℹ️ ${confirmedAgainNames.join(", ")} já tinha(m) presença confirmada anteriormente.`
+      }
+      
+      if (invalidNames.length > 0) {
+        if (infoMessage) infoMessage += "\n\n"
+        infoMessage += `⚠️ ${invalidNames.join(", ")} não foi(ram) encontrado(s).`
+        if (suggestions.length > 0) {
+          infoMessage += `\n${suggestions.join("\n")}`
+        }
+      }
+      
+      if (infoMessage) {
+        setSuccessMessage(infoMessage)
+      }
+      
+      // Don't auto-close the modal - let user close it manually
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao confirmar presença. Tente novamente.")
     } finally {
       setIsSubmitting(false)
     }
@@ -220,102 +287,49 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                   <p className="text-[#5A7A5A] text-lg mt-2">
                     Obrigado, esperamos você!
                   </p>
+                  {successMessage && (
+                    <p className="text-[#5A7A5A] text-lg mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200 whitespace-pre-line text-left">
+                      {successMessage}
+                    </p>
+                  )}
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Selected names chips */}
-                  {selectedNames.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {selectedNames.map((nome, index) => (
-                        <motion.div
-                          key={index}
-                          className="flex items-center gap-2 bg-[#2D4A3E] text-white px-3 py-1.5 rounded-full text-sm"
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                        >
-                          <span>{nome}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveName(nome)}
-                            className="hover:bg-[#3d5a4c] rounded-full p-0.5 transition-colors"
-                            disabled={isSubmitting}
-                          >
-                            <X className="w-3.5 h-3.5" />
-                          </button>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="relative">
+                  <div className="space-y-2">
+                    <label 
+                      htmlFor="fullName" 
+                      className="block text-lg font-semibold font-medium text-[#2D4A3E]"
+                    >
+                      Digite seu(s) nome(s) e sobrenome(s)
+                    </label>
                     <input
                       ref={inputRef}
                       type="text"
                       id="fullName"
                       value={inputValue}
-                      onChange={(e) => handleInputChange(e.target.value)}
-                      onFocus={() => {
-                        if (suggestions.length > 0) {
-                          setShowSuggestions(true)
-                        }
-                      }}
+                      onChange={(e) => setInputValue(e.target.value)}
                       className="w-full px-4 py-3 rounded-lg border border-[#D4B87A] bg-white text-[#2D4A3E] placeholder-[#5A7A5A]/50 focus:outline-none focus:ring-2 focus:ring-[#C4A35A] transition-shadow disabled:opacity-50 disabled:bg-gray-100"
-                      placeholder="Digite para buscar convidados..."
+                      placeholder="Ex: João Silva, Maria Santos"
                       disabled={isSubmitting || isDeadlinePassed}
                       autoComplete="off"
                     />
-
-                    {/* Suggestions dropdown */}
-                    <AnimatePresence>
-                      {showSuggestions && suggestions.length > 0 && (
-                        <motion.div
-                          ref={suggestionsRef}
-                          className="absolute z-50 w-full mt-1 bg-white border border-[#D4B87A] rounded-lg shadow-lg max-h-60 overflow-y-auto"
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          {suggestions.map((nome, index) => {
-                            const isConfirmed = confirmedNames.includes(nome)
-                            return (
-                              <button
-                                key={index}
-                                type="button"
-                                onClick={() => handleSelectSuggestion(nome)}
-                                disabled={isConfirmed}
-                                className={`w-full px-4 py-3 text-left transition-colors border-b border-[#D4B87A]/20 last:border-b-0 ${
-                                  isConfirmed
-                                    ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                                    : 'text-[#2D4A3E] hover:bg-[#F5F0E8] cursor-pointer'
-                                }`}
-                              >
-                                <span className={isConfirmed ? 'line-through' : ''}>
-                                  {nome}
-                                </span>
-                                {isConfirmed && (
-                                  <span className="ml-2 text-xs text-gray-500">(confirmado)</span>
-                                )}
-                              </button>
-                            )
-                          })}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    <p className="text-lg font-semibold text-[#5A7A5A]/70">
+                      Caso deseje confirmar mais de um nome, separe por vírgula
+                    </p>
                   </div>
 
                   {error && (
-                    <p className="text-red-500 text-sm text-center">{error}</p>
+                    <div className="text-red-500 text-lg text-center whitespace-pre-line bg-red-50 p-3 rounded-lg border border-red-200">
+                      {error}
+                    </div>
                   )}
 
                   <motion.button
                     type="submit"
-                    disabled={isSubmitting || isDeadlinePassed || selectedNames.length === 0}
+                    disabled={isSubmitting || isDeadlinePassed || !inputValue.trim()}
                     className="w-full py-3 px-6 bg-[#2D4A3E] text-white rounded-lg font-medium hover:bg-[#3d5a4c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    whileHover={!isDeadlinePassed && selectedNames.length > 0 ? { scale: 1.02 } : {}}
-                    whileTap={!isDeadlinePassed && selectedNames.length > 0 ? { scale: 0.98 } : {}}
+                    whileHover={!isDeadlinePassed && inputValue.trim() ? { scale: 1.02 } : {}}
+                    whileTap={!isDeadlinePassed && inputValue.trim() ? { scale: 0.98 } : {}}
                   >
                     {isSubmitting ? (
                       <>

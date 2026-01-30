@@ -14,9 +14,10 @@ Este projeto é um convite de casamento digital desenvolvido para proporcionar u
 - **Envelope Interativo**: Envelope realista com animação de abertura e selo de cera personalizado
 - **Design Elegante**: Decorações florais personalizadas com imagens de alta qualidade
 - **Sistema de Confirmação Inteligente**:
-  - Autocomplete com validação de convidados
-  - Seleção múltipla de nomes
+  - Input de texto livre com validação "por trás"
+  - Suporte a múltiplos nomes separados por vírgula
   - Apenas convidados da lista podem confirmar presença
+  - Validação fuzzy para nomes similares
 - **Confirmação com Prazo**: Sistema de RSVP com prazo limite (28/02/2026)
 - **Responsivo**: Totalmente adaptável para diferentes dispositivos
 - **Animações Suaves**: Transições e animações com Framer Motion
@@ -54,24 +55,24 @@ Este projeto é um convite de casamento digital desenvolvido para proporcionar u
 O projeto implementa um sistema robusto de confirmação de presença com validação, prazo limite e integração com Google Sheets:
 
 1. **Lista de Convidados**: Arquivo JSON (`convidados.json`) contém todos os nomes autorizados
-2. **Autocomplete Inteligente**: 
-   - Enquanto digita, o sistema filtra e sugere nomes da lista
-   - Exclui automaticamente nomes já selecionados
-   - Busca case-insensitive em qualquer parte do nome
-   - **Nomes já confirmados aparecem em cinza e não podem ser selecionados novamente**
-3. **Seleção Múltipla**:
-   - Possibilidade de selecionar vários convidados de uma vez
-   - Chips visuais exibem os nomes selecionados acima do input
-   - Fácil remoção individual através do botão X em cada chip
-4. **Validação Rigorosa**:
-   - Apenas nomes existentes na lista podem ser selecionados
-   - Botão de confirmação só habilita com pelo menos 1 nome selecionado
-   - Impossível confirmar presença sem selecionar da lista
-   - Impossível selecionar nomes já confirmados
+2. **Input de Texto Livre**: 
+   - Usuário digita seu(s) nome(s) completo(s) diretamente
+   - Suporte a múltiplos nomes separados por vírgula ou ponto-e-vírgula
+   - Sem dropdown visível - validação acontece em segundo plano
+3. **Validação Inteligente**:
+   - Normalização automática de strings (case-insensitive, remoção de espaços extras)
+   - Match exato contra a lista de convidados
+   - Busca fuzzy para sugerir nomes similares em caso de erro de digitação
+   - Validação de nomes já confirmados anteriormente
+4. **Processamento de Múltiplos Nomes**:
+   - Split automático por vírgula ou ponto-e-vírgula
+   - Validação individual de cada nome
+   - Confirmação parcial: processa nomes válidos mesmo que alguns tenham problemas
+   - Feedback detalhado sobre nomes inválidos ou já confirmados
 5. **Integração com Google Sheets**:
    - Sistema busca automaticamente nomes já confirmados da planilha
-   - Exibe nomes confirmados com texto riscado e cinza
-   - Etiqueta "(confirmado)" ao lado de nomes já processados
+   - Bloqueia re-confirmação de nomes já processados
+   - Exibe mensagem informativa quando nome já foi confirmado
    - Atualização em tempo real via Google Apps Script
 6. **Verificação de Prazo**: O sistema verifica automaticamente se ainda está dentro do prazo (até 28/02/2026)
 7. **Webhook**: Ao submeter, os dados são enviados para um webhook do Make.com via API Route
@@ -93,21 +94,29 @@ O projeto implementa um sistema robusto de confirmação de presença com valida
 ```bash
 [Lista de Convidados (JSON)]
     ↓
-[Autocomplete com Filtro]
+[Input de Texto Livre - Usuário digita nome(s)]
     ↓
 [Google Sheets API - Busca nomes confirmados]
     ↓
-[Exibe confirmados em cinza e bloqueados]
+[Split por vírgula/ponto-e-vírgula]
     ↓
-[Seleção Múltipla de Nomes disponíveis]
+[Normalização de strings (lowercase, trim)]
     ↓
-[Validação: Nomes existem na lista?]
+[Validação de cada nome]
+    ├─ Match exato na lista? ✓
+    ├─ Já confirmado? ℹ️ (ignora, mas continua)
+    └─ Nome similar? (sugestão fuzzy)
+    ↓
+[Processamento Inteligente]
+    ├─ Válidos → Confirma
+    ├─ Já confirmados → Informa na tela de sucesso
+    └─ Inválidos → Informa na tela de sucesso (se houver válidos)
     ↓
 [Verificação de Prazo (28/02/2026)]
     ↓
-[API Route (/api/rsvp)]
+[API Route (/api/rsvp) - Validação backend adicional]
     ↓
-[Webhook HTTP POST com array de nomes]
+[Webhook HTTP POST com array de nomes válidos]
     ↓
 [Make.com - Automação]
     ↓
@@ -133,7 +142,7 @@ wedding_invitation/
 │   ├── page.tsx             # Página principal com envelope e convite
 │   ├── layout.tsx           # Layout global
 │   ├── globals.css          # Estilos globais
-│   ├── convidados.json      # Lista de convidados autorizados
+│   ├── convidados.json      # Lista de cinput livre e validação inteligente
 │   └── api/
 │       └── rsvp/
 │           └── route.ts     # API Route para confirmações e busca de confirmados
@@ -241,10 +250,33 @@ WEBHOOK_URL=https://hook.us2.make.com/SEU_WEBHOOK_AQUI
   "names": [
     "Ana Silva",
     "João Pereira",
-    "Maria Santos"
-  ],
-  "confirmedAt": "2026-01-23T10:30:00.000Z",
-  "source": "wedding-invitation"
+    "Maria Santos" validados
+- Cada confirmação pode incluir vários convidados simultaneamente
+- O webhook recebe apenas os nomes válidos que foram processados com sucesso
+- A planilha deve ter os nomes na coluna A para o script funcionar corretamente
+- Nomes já confirmados ou inválidos são filtrados antes do envio
+
+### Exemplos de Validação
+
+**Entrada do usuário**: `"joão silva, Maria Santos, pedro costa"`
+
+**Processamento**:
+1. Split: `["joão silva", "Maria Santos", "pedro costa"]`
+2. Normalização: `["joão silva", "maria santos", "pedro costa"]`
+3. Validação contra `convidados.json`:
+   - "joão silva" → Match com "João Silva" ✓
+   - "maria santos" → Já confirmado ℹ️
+   - "pedro costa" → Não encontrado ❌
+
+**Resultado**:
+- Se "João Silva" está na lista e "Maria Santos" já confirmado:
+  -A validação será atualizada automaticamente
+
+**Dica**: Use nomes completos para evitar ambiguidade (ex: "João Silva" em vez de só "João")
+  - 🎉 Tela de sucesso com aviso: "ℹ️ Maria Santos já tinha presença confirmada anteriormente. ⚠️ pedro costa não foi encontrado na lista de convidados."
+  
+- Se todos os nomes tiverem problemas:
+  - ❌ Bloqueia e mostra erro detalhado
 }
 ```
 

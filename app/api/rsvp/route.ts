@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import convidadosData from "@/app/convidados.json"
 
 export async function POST(request: Request) {
   try {
@@ -7,14 +8,39 @@ export async function POST(request: Request) {
 
     if (!names || !Array.isArray(names) || names.length === 0) {
       return NextResponse.json(
-        { error: "Pelo menos um nome deve ser selecionado" },
+        { error: "Pelo menos um nome deve ser informado" },
         { status: 400 }
       )
     }
 
-    // Prepare RSVP data
+    // Validate all names against the guest list
+    const normalizeString = (str: string) => str.toLowerCase().trim().replace(/\s+/g, ' ')
+    const validNames: string[] = []
+    const invalidNames: string[] = []
+
+    for (const name of names) {
+      const normalized = normalizeString(name)
+      const isValid = convidadosData.convidados.some(
+        (convidado) => normalizeString(convidado) === normalized
+      )
+      
+      if (isValid) {
+        validNames.push(name)
+      } else {
+        invalidNames.push(name)
+      }
+    }
+
+    if (invalidNames.length > 0) {
+      return NextResponse.json(
+        { error: `Nome(s) não encontrado(s): ${invalidNames.join(", ")}` },
+        { status: 400 }
+      )
+    }
+
+    // Prepare RSVP data with validated names
     const rsvpData = {
-      names,
+      names: validNames,
       confirmedAt: confirmedAt || new Date().toISOString(),
     }
 
