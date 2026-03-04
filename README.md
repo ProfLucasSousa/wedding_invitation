@@ -2,8 +2,7 @@
 
 Um convite de casamento digital elegante e interativo, desenvolvido com tecnologias modernas e integrado com automação para gerenciamento de confirmações.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/proflucassilvas-projects/v0-wedding-invitation-website)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/glw4dbonAE6)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/proflucassilvas-projects/wedding-invitation-website)
 
 ## 🌟 Sobre o Projeto
 
@@ -304,13 +303,6 @@ O sistema implementa um controle de prazo automático:
   - Botão de confirmação desabilitado
   - Mensagem de "Prazo Encerrado" exibida
   - Validação automática no frontend
-
-## 🎨 Customização
-
-O projeto foi desenvolvido inicialmente usando v0.app e pode ser customizado de duas formas:
-
-1. **Via v0.app**: Continue editando no [chat do v0](https://v0.app/chat/glw4dbonAE6)
-2. **Manualmente**: Edite os arquivos diretamente neste repositório
 
 ## 📝 Licença
 
