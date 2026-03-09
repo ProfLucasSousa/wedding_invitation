@@ -21,8 +21,8 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
   const [error, setError] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Check if current date is past deadline (07/03/2026)
-  const deadline = new Date("2026-03-07T23:59:59")
+  // Check if current date is past deadline (10/03/2026)
+  const deadline = new Date("2026-03-10T23:59:59")
   const isDeadlinePassed = new Date() > deadline
 
   // Fetch confirmed names when modal opens
@@ -265,7 +265,7 @@ export function RsvpModal({ isOpen, onClose }: RsvpModalProps) {
                   Confirmação de presença
                 </h2>
                 <p className="text-[#5A7A5A] text-xl">
-                  Confirmações até <span className="font-semibold text-[#2D4A3E]">07 de março de 2026</span>
+                  Confirmações até <span className="font-semibold text-[#2D4A3E]">10 de março de 2026</span>
                 </p>
                 {isDeadlinePassed && (
                   <p className="text-red-600 text-xl mt-2 font-medium">
