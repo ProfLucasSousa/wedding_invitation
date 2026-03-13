@@ -93,7 +93,7 @@ export function InvitationContent({ isVisible, onRsvpClick }: InvitationContentP
       <motion.div variants={itemVariants} className="flex justify-center gap-6 my-4">
         {/* Ceremony location */}
         <motion.a
-          href="https://maps.app.goo.gl/gvyvmwM1VUyFVwVL9"
+          href="https://maps.app.goo.gl/k3WUMRGJNdcvAhXdA"
           target="_blank"
           rel="noopener noreferrer"
           className="w-16 h-16 rounded-full bg-[#2D4A3E] flex items-center justify-center shadow-lg hover:bg-[#3d5a4c] transition-colors"
